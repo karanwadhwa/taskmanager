@@ -6,10 +6,22 @@ import { Platform, StatusBar, StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import firebase from "firebase";
 
 import configureStore from "./store";
 
 import AppNavigator from "./navigation/AppNavigator";
+
+import {
+  FIREBASE_API_KEY,
+  FIREBASE_AUTH_DOMAIN,
+  FIREBASE_DATABASE_URL,
+  FIREBASE_PROJECT_ID,
+  FIREBASE_STORAGE_BUCKET,
+  FIREBASE_MESSAGING_SENDER_ID,
+  FIREBASE_APP_ID,
+  FIREBASE_MEASUREMENT_ID
+} from "react-native-dotenv";
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
@@ -24,6 +36,19 @@ export default function App(props) {
       />
     );
   } else {
+    const firebaseConfig = {
+      apiKey: FIREBASE_API_KEY,
+      authDomain: FIREBASE_AUTH_DOMAIN,
+      databaseURL: FIREBASE_DATABASE_URL,
+      projectId: FIREBASE_PROJECT_ID,
+      storageBucket: FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+      measurementId: FIREBASE_MEASUREMENT_ID,
+      appId: FIREBASE_APP_ID
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
     return (
       <Provider store={store}>
         <PersistGate persistor={persistor}>
