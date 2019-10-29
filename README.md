@@ -20,9 +20,10 @@ Or Request a link [here](https://expo.io/@karanwadhwa/taskmanager).
 - [Yarn](https://yarnpkg.com) or [npm](https://www.npmjs.com/)
 - [Expo](https://expo.io/)
 - [React Native](https://facebook.github.io/react-native/)
-- ~~[React Native Navigation](https://github.com/wix/react-native-navigation)~~ [React Navigation](https://reactnavigation.org/)
-- [Redux](https://redux.js.org/)
-- [Redux Persist](https://github.com/rt2zz/redux-persist)
+- [React Navigation](https://reactnavigation.org/)
+- [Firebase](https://firebase.google.com/)
+- ~[Redux](https://redux.js.org/)~
+- ~[Redux Persist](https://github.com/rt2zz/redux-persist)~
 
 ```sh
 $ git clone git@github.com:karanwadhwa/taskmanager.git
@@ -30,13 +31,34 @@ $ cd RecipeShare
 $ yarn or npm install
 $ expo start
 ```
-Or [Download APK](https://github.com/karanwadhwa/taskmanager/blob/master/taskmanager-8bed2bb387624f7580de2fe45abe8b00-signed.apk)
+Or [Download APK - v1](https://github.com/karanwadhwa/taskmanager/blob/master/taskmanager-8bed2bb387624f7580de2fe45abe8b00-signed.apk)
 
 # Screens 
-
+<details>
+ <summary>Version 1</summary>
 <img src="/demo/Login.png" vspace="5"   align= "left" height="500" width="275">
 <img src="/demo/Signup.png" vspace="5"   align= "left" height="500" width="275" >
 <img src="/demo/Login Fail.png" vspace="5"  height="500" width="275" >
 <img src="/demo/Task list.png" vspace="5"  align= "left" height="500" width="275">
 <img src="/demo/New Post.png" vspace="5"  align= "left"  height="500" width="275" >
 <img src="/demo/Delete Post.png" vspace="5"  height="500" width="275" >
+</details>
+<hr>
+<h3> Version 2 </h3>
+Updated with firebase authentication and tasks storage onto Firebase Realtime Database. Removed Redux and localstorage
+
+<img src="/demo/v2-login.png" vspace="5"   align= "left" height="500" width="275">
+<img src="/demo/v2-login-fail-email.png" vspace="5"   align= "left" height="500" width="275" >
+<img src="/demo/v2-login-fail-password.png" vspace="5"  height="500" width="275" >
+
+<img src="/demo/v2-signup.png" vspace="5"  align= "left" height="500" width="275">
+<img src="/demo/v2-signup-fail-email.png" vspace="5"  align= "left"  height="500" width="275" >
+<img src="/demo/v2-signup-success.png" vspace="5"  height="500" width="275" >
+
+<img src="/demo/v2-home.png" vspace="5"   align= "left" height="500" width="275">
+<img src="/demo/v2-create-task.png" vspace="5"   align= "left" height="500" width="275" >
+<img src="/demo/v2-created-task.png" vspace="5"  height="500" width="275" >
+
+<img src="/demo/v2-mark-complete.png" vspace="5"   align= "left" height="500" width="275">
+<img src="/demo/v2-delete-task.png" vspace="5"   align= "left" height="500" width="275" >
+<img src="/demo/v2-deleted-task.png" vspace="5"  height="500" width="275" >
