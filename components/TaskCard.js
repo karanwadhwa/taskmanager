@@ -1,12 +1,24 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 
 import Feather from "@expo/vector-icons/Feather";
 
 const TaskCard = props => {
-  const { name, body, timestamp } = props.data;
+  const { name, body, timestamp, key, completed } = props.data;
   return (
-    <View style={styles.cardContainer}>
+    <TouchableOpacity
+      style={styles.cardContainer}
+      onLongPress={() =>
+        Alert.alert(
+          "Delete Task",
+          "Are you sure you want to delete this task?",
+          [
+            { text: "No, Take Me Back!" },
+            { text: "Yes", onPress: () => props.DeleteTask(key) }
+          ]
+        )
+      }
+    >
       <View style={{ padding: 15 }}>
         <View
           style={{
@@ -16,8 +28,19 @@ const TaskCard = props => {
           }}
         >
           <Text style={styles.titleText}>{name}</Text>
-          <TouchableOpacity onPress={() => props.DeleteTask(timestamp)}>
-            <Feather name="trash-2" color="red" />
+          <TouchableOpacity
+            onPress={() =>
+              props.UpdateTask(key, {
+                ...props.data,
+                completed: !completed
+              })
+            }
+          >
+            {completed ? (
+              <Feather size={20} name="check-square" color="green" />
+            ) : (
+              <Feather size={20} name="square" color="gray" />
+            )}
           </TouchableOpacity>
         </View>
 
@@ -26,7 +49,7 @@ const TaskCard = props => {
           {new Date(timestamp).toDateString()}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -95,7 +95,21 @@ export class HomeScreen extends Component {
     });
   };
 
-  DeleteTask = () => {};
+  DeleteTask = key => {
+    const { currentUser } = firebase.auth();
+    firebase
+      .database()
+      .ref(`/users/${currentUser.uid}/tasks/${key}`)
+      .remove();
+  };
+
+  UpdateTask = (key, updatedData) => {
+    const { currentUser } = firebase.auth();
+    firebase
+      .database()
+      .ref(`/users/${currentUser.uid}/tasks/${key}`)
+      .set(updatedData);
+  };
 
   _closeNewTaskModal = () => {
     this.props.navigation.setParams({
@@ -180,7 +194,11 @@ export class HomeScreen extends Component {
             object it needs to be converted into a workable array first */
             data={this._FlatListData(this.state.tasks)}
             renderItem={({ item }) => (
-              <TaskCard data={item} DeleteTask={this.DeleteTask} />
+              <TaskCard
+                data={item}
+                DeleteTask={this.DeleteTask}
+                UpdateTask={this.UpdateTask}
+              />
             )}
             keyExtractor={item => item.key.toString()}
           />
