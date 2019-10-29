@@ -5,16 +5,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  Modal
+  Modal,
+  ActivityIndicator,
+  YellowBox
 } from "react-native";
-import { connect } from "react-redux";
+import firebase from "firebase";
 import { DrawerActions } from "react-navigation";
 import Feather from "@expo/vector-icons/Feather";
 
 import TaskCard from "../components/TaskCard";
 import InputField from "../components/InputField";
-
-import { saveNewTask, deleteTask } from "../store/actions";
 
 export class HomeScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -48,6 +48,8 @@ export class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      tasks: [],
+      loading: true,
       newTask: {
         name: "",
         body: ""
@@ -55,17 +57,30 @@ export class HomeScreen extends Component {
     };
   }
 
-  _closeNewTaskModal = () => {
-    this.props.navigation.setParams({
-      newTaskModalVisible: false
-    });
-  };
+  componentDidMount() {
+    //https://github.com/facebook/react-native/issues/12981
+    YellowBox.ignoreWarnings(["Setting a timer"]);
 
-  _saveNewTask = () => {
+    const { currentUser } = firebase.auth();
+
+    // fetch all tasks
+    firebase
+      .database()
+      .ref(`/users/${currentUser.uid}/tasks`)
+      .on("value", snapshot =>
+        this.setState({ tasks: snapshot.val(), loading: false })
+      );
+  }
+
+  SaveNewTask = () => {
     const { name, body } = this.state.newTask;
+    const { currentUser } = firebase.auth();
 
     !!name && !!body
-      ? this.props.saveNewTask(this.state.newTask)
+      ? firebase
+          .database()
+          .ref(`/users/${currentUser.uid}/tasks`)
+          .push({ name, body, timestamp: Date.now(), completed: false })
       : alert("All fields are required.");
 
     this._closeNewTaskModal();
@@ -77,9 +92,20 @@ export class HomeScreen extends Component {
     });
   };
 
-  _handleDelete = timestamp => {
-    this.props.deleteTask(timestamp);
+  DeleteTask = () => {};
+
+  _closeNewTaskModal = () => {
+    this.props.navigation.setParams({
+      newTaskModalVisible: false
+    });
   };
+
+  _FlatListData = data =>
+    Object.entries(data)
+      .map(d => {
+        return { ...d[1], key: d[0] };
+      })
+      .reverse();
 
   newTaskModal = () => (
     <Modal
@@ -119,7 +145,7 @@ export class HomeScreen extends Component {
                 })
               }
             />
-            <TouchableOpacity style={styles.button} onPress={this._saveNewTask}>
+            <TouchableOpacity style={styles.button} onPress={this.SaveNewTask}>
               <Text style={{ color: "#FFF" }}>Save</Text>
             </TouchableOpacity>
           </View>
@@ -129,31 +155,28 @@ export class HomeScreen extends Component {
   );
 
   render() {
-    return (
+    return this.state.loading ? (
+      <ActivityIndicator
+        color="#0057FF"
+        size="large"
+        style={{ alignSelf: "center", flex: 1 }}
+      />
+    ) : (
       <View style={styles.container}>
         {this.newTaskModal()}
         <FlatList
-          data={this.props.tasks}
+          data={this._FlatListData(this.state.tasks)}
           renderItem={({ item }) => (
-            <TaskCard data={item} DeleteTask={this.props.deleteTask} />
+            <TaskCard data={item} DeleteTask={this.DeleteTask} />
           )}
-          keyExtractor={item => item.timestamp.toString()}
+          keyExtractor={item => item.key.toString()}
         />
       </View>
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    tasks: state.tasks
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  { saveNewTask, deleteTask }
-)(HomeScreen);
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
