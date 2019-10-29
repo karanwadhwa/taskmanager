@@ -7,6 +7,7 @@ import {
   Alert,
   ActivityIndicator
 } from "react-native";
+import firebase from "firebase";
 
 import InputField from "../components/InputField";
 
@@ -24,7 +25,22 @@ export class SignupScreen extends Component {
   }
 
   _handleSignUp = () => {
-    this.props.navigation.navigate("Main");
+    this.setState({ error: "", loading: true });
+    this.state.password === this.state.confirmPassword
+      ? firebase
+          .auth()
+          .createUserWithEmailAndPassword(this.state.email, this.state.password)
+          .then(() => {
+            Alert.alert(
+              "Account Created",
+              "Your account was created successfully. Please login to continue."
+            );
+            this.props.navigation.navigate("Login");
+          })
+          .catch(error =>
+            this.setState({ error: error.message, loading: false })
+          )
+      : this.setState({ error: "Passwords do not match", loading: false });
   };
 
   render() {

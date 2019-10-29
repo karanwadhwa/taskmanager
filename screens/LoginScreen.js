@@ -4,9 +4,9 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   ActivityIndicator
 } from "react-native";
+import firebase from "firebase";
 
 import InputField from "../components/InputField";
 
@@ -22,7 +22,12 @@ export class LoginScreen extends Component {
   }
 
   _handleLogin = () => {
-    this.props.navigation.navigate("Main");
+    this.setState({ error: "", loading: true });
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(this.state.email, this.state.password)
+      .then(() => this.props.navigation.navigate("Main"))
+      .catch(error => this.setState({ error: error.message, loading: false }));
   };
 
   render() {
