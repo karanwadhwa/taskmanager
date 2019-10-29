@@ -4,11 +4,9 @@ import * as Font from "expo-font";
 import React, { useState } from "react";
 import { Platform, StatusBar, StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
 import firebase from "firebase";
 
-import configureStore from "./store";
+//import configureStore from "./store";
 
 import AppNavigator from "./navigation/AppNavigator";
 
@@ -25,7 +23,6 @@ import {
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
-  const { persistor, store } = configureStore();
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (
@@ -50,14 +47,10 @@ export default function App(props) {
     firebase.initializeApp(firebaseConfig);
 
     return (
-      <Provider store={store}>
-        <PersistGate persistor={persistor}>
-          <View style={styles.container}>
-            {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-            <AppNavigator />
-          </View>
-        </PersistGate>
-      </Provider>
+      <View style={styles.container}>
+        {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+        <AppNavigator />
+      </View>
     );
   }
 }
