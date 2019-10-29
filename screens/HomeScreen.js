@@ -48,7 +48,7 @@ export class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tasks: [],
+      tasks: {},
       loading: true,
       newTask: {
         name: "",
@@ -101,6 +101,11 @@ export class HomeScreen extends Component {
   };
 
   _FlatListData = data =>
+    // data recieved from firebase is (collection) an object with individual tasks
+    // as separate objects with firebase-defined-id as the key and actual task object as value
+    // Object.entries breaks down the collection into an array of arrays with 2 elements each
+    // [0] as the key and [1] as value which is then mapped to get an array of objects combining
+    // the data and the key value into a single object
     Object.entries(data)
       .map(d => {
         return { ...d[1], key: d[0] };
@@ -164,13 +169,19 @@ export class HomeScreen extends Component {
     ) : (
       <View style={styles.container}>
         {this.newTaskModal()}
-        <FlatList
-          data={this._FlatListData(this.state.tasks)}
-          renderItem={({ item }) => (
-            <TaskCard data={item} DeleteTask={this.DeleteTask} />
-          )}
-          keyExtractor={item => item.key.toString()}
-        />
+
+        {/* render FlatList only if state.tasks is !empty*/}
+        {!!this.state.tasks && (
+          <FlatList
+            /* Since the data fetched from firebase is not an array but an 
+            object it needs to be converted into a workable array first */
+            data={this._FlatListData(this.state.tasks)}
+            renderItem={({ item }) => (
+              <TaskCard data={item} DeleteTask={this.DeleteTask} />
+            )}
+            keyExtractor={item => item.key.toString()}
+          />
+        )}
       </View>
     );
   }
