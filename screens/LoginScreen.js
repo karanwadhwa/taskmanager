@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator
+} from "react-native";
 
 import InputField from "../components/InputField";
 
@@ -7,33 +14,24 @@ export class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: "",
-      password: ""
+      email: "",
+      password: "",
+      error: "",
+      loading: false
     };
   }
 
   _handleLogin = () => {
-    const defaultUser = {
-      username: "karan",
-      password: "yapsody"
-    };
-
-    this.state.username.toLowerCase() === defaultUser.username &&
-    this.state.password === defaultUser.password
-      ? this.props.navigation.navigate("Main")
-      : Alert.alert(
-          "Invalid Credentials",
-          'Login with the following default credentials instead:\n\nUsername: "karan"\nPassword: "yapsody"'
-        );
+    this.props.navigation.navigate("Main");
   };
 
   render() {
     return (
       <View style={styles.container}>
         <InputField
-          label="Username"
-          value={this.state.username}
-          onChangeText={username => this.setState({ username })}
+          label="Email"
+          value={this.state.email}
+          onChangeText={email => this.setState({ email })}
         />
         <InputField
           label="Password"
@@ -42,8 +40,16 @@ export class LoginScreen extends Component {
           onChangeText={password => this.setState({ password })}
         />
 
+        <Text style={{ color: "red", textAlign: "center" }}>
+          {this.state.error}
+        </Text>
+
         <TouchableOpacity style={styles.button} onPress={this._handleLogin}>
-          <Text style={{ color: "#FFF" }}>LOG IN</Text>
+          {this.state.loading ? (
+            <ActivityIndicator color="#FFF" />
+          ) : (
+            <Text style={{ color: "#FFF" }}>LOG IN</Text>
+          )}
         </TouchableOpacity>
 
         <View style={{ alignItems: "center", marginTop: 20 }}>
@@ -74,6 +80,8 @@ const styles = StyleSheet.create({
     margin: 10,
     paddingHorizontal: 30,
     paddingVertical: 12,
+    width: "40%",
+    alignItems: "center",
     backgroundColor: "#0057FF",
     borderRadius: 4
   }

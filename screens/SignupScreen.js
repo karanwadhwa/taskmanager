@@ -1,31 +1,67 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator
+} from "react-native";
 
 import InputField from "../components/InputField";
 
 export class SignupScreen extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      error: "",
+      loading: false
+    };
+  }
+
+  _handleSignUp = () => {
+    this.props.navigation.navigate("Main");
+  };
+
   render() {
     return (
       <View style={styles.container}>
-        <InputField label="Full Name" />
-        <InputField label="Username" />
-        <InputField label="Password" />
+        <InputField
+          label="Email"
+          value={this.state.email}
+          onChangeText={email => this.setState({ email })}
+        />
+        <InputField
+          label="Password"
+          value={this.state.password}
+          secureTextEntry={true}
+          onChangeText={password => this.setState({ password })}
+        />
+        <InputField
+          label="Confirm Password"
+          value={this.state.confirmPassword}
+          secureTextEntry={true}
+          onChangeText={confirmPassword => this.setState({ confirmPassword })}
+        />
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            Alert.alert(
-              "Account not created",
-              'No account was created. You have been logged in to the default account regardless. Use the following default credentials for future logins:\n\nUsername: "karan"\nPassword: "yapsody"'
-            );
-            this.props.navigation.navigate("Main");
-          }}
-        >
-          <Text style={{ color: "#FFF" }}>SIGN UP</Text>
+        <Text style={{ color: "red", textAlign: "center" }}>
+          {this.state.error}
+        </Text>
+
+        <TouchableOpacity style={styles.button} onPress={this._handleSignUp}>
+          {this.state.loading ? (
+            <ActivityIndicator color="#FFF" />
+          ) : (
+            <Text style={{ color: "#FFF" }}>SIGN UP</Text>
+          )}
         </TouchableOpacity>
 
         <View style={{ alignItems: "center", marginTop: 20 }}>
-          <Text>Don't have an account?</Text>
+          <Text>Have an account?</Text>
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate("Login")}
           >
@@ -52,6 +88,8 @@ const styles = StyleSheet.create({
     margin: 10,
     paddingHorizontal: 30,
     paddingVertical: 12,
+    width: "40%",
+    alignItems: "center",
     backgroundColor: "#0057FF",
     borderRadius: 4
   }
