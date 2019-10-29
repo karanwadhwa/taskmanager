@@ -37,7 +37,10 @@ export class HomeScreen extends Component {
         </TouchableOpacity>
         <TouchableOpacity
           style={{ paddingHorizontal: 15 }}
-          onPress={() => navigation.navigate("Auth")}
+          onPress={() => {
+            firebase.auth().signOut();
+            navigation.navigate("Auth");
+          }}
         >
           <Feather name="power" size={24} />
         </TouchableOpacity>
